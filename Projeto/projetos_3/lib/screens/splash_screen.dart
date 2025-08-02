@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
+  /*
+    Essa classe tem como função definir uma tela de loading do aplicativo com a identidade visual da marca
+  */
   const SplashScreen({super.key});
 
   @override

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegistrarScreen extends StatefulWidget {
+  const RegistrarScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState(); // necessario para StatefulWidget criação de estado
+  State<RegistrarScreen> createState() => _RegistrarScreenState(); // necessario para StatefulWidget criação de estado
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistrarScreenState extends State<RegistrarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,15 +61,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(height: 10.h),
-            Align(
-              alignment: Alignment.centerLeft, // Alinha o texto à esquerda
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/registrar');
-                },
-                child: const Text('Criar conta'),
+            const TextField(
+              // campo de texto para a senha
+              obscureText: true, // Esconde o texto digitado
+              decoration: InputDecoration(
+                labelText: 'Nova Senha',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
               ),
             ),
+
             SizedBox(height: 10.h),
 
             ElevatedButton(
@@ -90,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text('Entrar'),
+              child: const Text('criar conta'),
             ),
           ],
         ),

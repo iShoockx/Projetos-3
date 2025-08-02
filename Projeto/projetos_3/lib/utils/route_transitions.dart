@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 Route slideFromRight(Widget page) {
+  /*
+    O arquivo contém o código da animação suave de transcição para a abertura da página de notificações 
+  */
+
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
