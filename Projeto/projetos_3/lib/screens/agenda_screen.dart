@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projetos_3/models/appbar.dart';
-import 'package:projetos_3/models/navbar.dart';
+import 'package:projetos_3/widgets/appbar.dart';
+import 'package:projetos_3/widgets/navbar.dart';
 
 class AgendaScreen extends StatefulWidget {
   const AgendaScreen({super.key});

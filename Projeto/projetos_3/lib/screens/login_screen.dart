@@ -5,14 +5,19 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState(); // necessario para StatefulWidget criação de estado
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  bool _obscure = true;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Scaffold é o layout básico do Material Design
       appBar: AppBar(
         elevation: 2,
         backgroundColor: Colors.white,
@@ -32,67 +37,99 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       body: Padding(
-        // Corpo do texto
         padding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: Column(
-          // Coluna para organizar os widgets verticalmente
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Centraliza verticalmente
-          children: [
-            // Comando para adicionar widgets
-            const TextField(
-              // Campo de texto para o usuário
-              decoration: InputDecoration(
-                labelText: 'Usuário',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: Form(
+          //elemento Forms com os campos de login
+          key: _formKey, //chave do forms
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                //campo de forms para o email
+                controller:
+                    _emailController, //linka o campo com o controller para registrar as alterações
+                decoration: const InputDecoration(
+                  labelText: 'E-mail',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-            const TextField(
-              // campo de texto para a senha
-              obscureText: true, // Esconde o texto digitado
-              decoration: InputDecoration(
-                labelText: 'Senha',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-              ),
-            ),
-            SizedBox(height: 10.h),
-            Align(
-              alignment: Alignment.centerLeft, // Alinha o texto à esquerda
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/registrar');
+                validator: (value) {
+                  //lida com as informações dos campos para validar suas informações
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira seu e-mail';
+                  }
+                  if (!value.contains('@')) {
+                    return 'E-mail inválido';
+                  }
+                  return null;
                 },
-                child: const Text('Criar conta'),
               ),
-            ),
-            SizedBox(height: 10.h),
+              SizedBox(height: 10.h),
+              TextFormField(
+                //campo do forms para a senha
+                controller:
+                    _passwordController, //linka o campo com o controller para registrar as alterações
+                obscureText: _obscure,
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/home');
-              },
-
-              style: ElevatedButton.styleFrom(
-                elevation: 6,
-                shadowColor: Colors.black.withOpacity(0.2),
-                backgroundColor: Colors.grey[300],
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 15,
+                decoration: InputDecoration(
+                  labelText: 'Senha',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscure ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                validator: (value) {
+                  //lida com as informações dos campos para validar suas informações
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira sua senha';
+                  }
+                  if (value.length < 6) {
+                    return 'A senha deve ter pelo menos 6 caracteres';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10.h),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/registrar');
+                  },
+                  child: const Text('Criar conta'),
                 ),
               ),
-              child: const Text('Entrar'),
-            ),
-          ],
+              SizedBox(height: 10.h),
+              ElevatedButton(
+                onPressed: () {
+                  //função para lidar com as informações do forms
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  elevation: 6,
+                  shadowColor: Colors.black.withOpacity(0.2),
+                  backgroundColor: Colors.grey[300],
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 15,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text('Entrar'),
+              ),
+            ],
+          ),
         ),
       ),
     );
