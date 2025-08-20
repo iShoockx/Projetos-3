@@ -22,7 +22,7 @@ class User { // Campos tabela
     required this.id,
     required this.name,
     required this.password,
-    this.email,
+    required this.email,
     this.celular,
     required this.role,
     required this.createdAt,

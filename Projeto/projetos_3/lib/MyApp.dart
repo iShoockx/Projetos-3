@@ -6,7 +6,7 @@ import 'screens/home_screen.dart';
 import 'screens/inventario_screen.dart';
 import 'screens/agenda_screen.dart';
 import 'screens/andamento_screen.dart';
-import 'screens/registrar_screen.dart';
+
 
 class MyApp extends StatelessWidget {
   /* 
@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
           '/inventario': (context) => const InventarioScreen(),
           '/agenda': (context) => const AgendaScreen(),
           '/andamento': (context) => const AndamentoScreen(),
-          '/registrar': (context) => const RegistrarScreen(),
         },
       ),
     );

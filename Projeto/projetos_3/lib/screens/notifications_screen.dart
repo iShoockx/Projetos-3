@@ -23,13 +23,15 @@ class NotificationsScreen extends StatelessWidget {
 
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            NotificacaoItem(titulo: 'Alicate', tempo: '5d'), 
-            //chama a renderização das notificações
-            SizedBox(height: 16.h),
-            NotificacaoItem(titulo: 'Manutenção', tempo: '4h'),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              NotificacaoItem(titulo: 'Alicate', tempo: '5d'), 
+              //chama a renderização das notificações
+              SizedBox(height: 16.h),
+              NotificacaoItem(titulo: 'Manutenção', tempo: '4h'),
+            ],
+          ),
         ),
       ),
     );
