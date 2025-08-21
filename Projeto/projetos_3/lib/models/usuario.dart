@@ -24,7 +24,7 @@ class AppUser {
   final UserRole role;
   final DateTime createdAt;
 
-  const AppUser({
+   AppUser({
     required this.id,
     required this.name,
     this.email,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projetos_3/models/produto.dart';
 
 class InventarioItens extends StatelessWidget {
   final Produto produto;
 
   const InventarioItens({
-    Key? key,
+    super.key,
     required this.produto,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +24,8 @@ class InventarioItens extends StatelessWidget {
               icon: Icon(Icons.edit, color: Colors.blue),
               onPressed: () {
                 // Ação para editar o item
-                TextEditingController controller =
-                    TextEditingController(text: produto.nome);
-                TextEditingController quantityController =
-                    TextEditingController(text: produto.quantidade.toString());
+                TextEditingController controller = TextEditingController(text: produto.nome);
+                TextEditingController quantityController = TextEditingController(text: produto.quantidade.toString());
         
                 showDialog(
                   context: context,

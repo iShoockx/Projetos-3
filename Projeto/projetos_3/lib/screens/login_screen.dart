@@ -66,8 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       // TODO: Navegar para sua home após autenticar:
-      // if (!mounted) return;
-      // Navigator.pushReplacementNamed(context, '/home');
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/home');
     } on Exception catch (e) {
       if (!mounted) return;
       final msg = _firebaseErrorMessage(e.toString());
