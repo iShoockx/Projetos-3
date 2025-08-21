@@ -36,7 +36,7 @@ class AndamentoScreen extends StatelessWidget {
         ],
       ),
 
-      bottomNavigationBar: Navbar(),
+      bottomNavigationBar: const Navbar(currentRoute: "/andamento"),
     );
   }
 }

@@ -1,8 +1,11 @@
+// lib/screens/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../services/auth.dart';
+import '../models/usuario.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -10,12 +13,86 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  bool _obscure = true;
-  bool cadastro = false; // Variável para controlar o estado do cadastro
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _celularController = TextEditingController();
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final _auth = AuthService();
+
+  bool _obscure = true;
+  bool _isRegister = false;
+  bool _loading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    _celularController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _loading = true);
+
+    try {
+      if (_isRegister) {
+        await _auth.signUp(
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          celular: _celularController.text.trim().isEmpty
+              ? null
+              : _celularController.text.trim(),
+          role: UserRole.cliente,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+          );
+        }
+      } else {
+        await _auth.signIn(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login realizado com sucesso!')),
+          );
+        }
+      }
+
+      // TODO: Navegar para sua home após autenticar:
+      // if (!mounted) return;
+      // Navigator.pushReplacementNamed(context, '/home');
+    } on Exception catch (e) {
+      if (!mounted) return;
+      final msg = _firebaseErrorMessage(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  String _firebaseErrorMessage(String raw) {
+    // mapeia algumas mensagens comuns do FirebaseAuth
+    if (raw.contains('email-already-in-use')) {
+      return 'E-mail já está em uso.';
+    } else if (raw.contains('invalid-email')) {
+      return 'E-mail inválido.';
+    } else if (raw.contains('weak-password')) {
+      return 'Senha fraca. Use 6+ caracteres.';
+    } else if (raw.contains('user-not-found') ||
+        raw.contains('wrong-password')) {
+      return 'E-mail ou senha incorretos.';
+    } else if (raw.contains('network-request-failed')) {
+      return 'Falha de rede. Verifique sua conexão.';
+    }
+    return 'Erro: $raw';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,137 +115,141 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: Form(
-          //elemento Forms com os campos de login
-          key: _formKey, //chave do forms
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                  //campo de forms para o emailw
-                  controller:
-                      _emailController, //linka o campo com o controller para registrar as alterações
-                  decoration: const InputDecoration(
-                    labelText: 'E-mail',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                  ),
-                  // validator: (value) {
-                  //   //lida com as informações dos campos para validar suas informações
-                  //   if (value == null || value.isEmpty) {
-                  //     return 'Por favor, insira seu e-mail';
-                  //   }
-                  //   if (!value.contains('@')) {
-                  //     return 'E-mail inválido';
-                  //   }
-                  //   return null;
-                  // },
-                ),
-                SizedBox(height: 10.h),
-                TextFormField(
-                  //campo do forms para a senha
-                  controller:
-                      _passwordController, //linka o campo com o controller para registrar as alterações
-                  obscureText: _obscure,
-            
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscure ? Icons.visibility_off : Icons.visibility,
-                      ),
-                      onPressed: () => setState(() => _obscure = !_obscure),
-                    ),
-                  ),
-                  // validator: (value) {
-                  //   //lida com as informações dos campos para validar suas informações
-                  //   if (value == null || value.isEmpty) {
-                  //     return 'Por favor, insira sua senha';
-                  //   }
-                  //   if (value.length < 6) {
-                  //     return 'A senha deve ter pelo menos 6 caracteres';
-                  //   }
-                  //   return null;
-                  // },
-                ),
-                SizedBox(height: 10.h),
-                Visibility(
-                  visible: cadastro,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 420.w),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextFormField(
-                        //campo do forms para a confirmação de senha
-                        obscureText: _obscure,
-                        decoration: InputDecoration(
-                          labelText: 'Confirmar Senha',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscure ? Icons.visibility_off : Icons.visibility,
-                            ),
-                            onPressed: () => setState(() => _obscure = !_obscure),
-                          ),
+                      SizedBox(height: 24.h),
+                      Text(
+                        _isRegister ? 'Criar conta' : 'Entrar',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 26.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      TextFormField(
-                        //campo de forms para o email
-                        controller:
-                            _nameController, //linka o campo com o controller para registrar as alterações
-                        decoration: const InputDecoration(
-                          labelText: 'nome',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                      SizedBox(height: 24.h),
+                      if (_isRegister) ...[
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Nome',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
                           ),
+                          validator: (v) {
+                            if (_isRegister &&
+                                (v == null || v.trim().length < 2)) {
+                              return 'Informe seu nome';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 12.h),
+                        TextFormField(
+                          controller: _celularController,
+                          decoration: const InputDecoration(
+                            labelText: 'Celular (opcional)',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                          ),
+                          keyboardType: TextInputType.phone,
+                        ),
+                        SizedBox(height: 12.h),
+                      ],
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'E-mail',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          final v = value?.trim() ?? '';
+                          if (v.isEmpty || !v.contains('@')) {
+                            return 'Informe um e-mail válido';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 12.h),
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Senha',
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () =>
+                                setState(() => _obscure = !_obscure),
+                            icon: Icon(
+                              _obscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ),
+                        obscureText: _obscure,
+                        validator: (value) {
+                          if ((value ?? '').length < 6) {
+                            return 'Use ao menos 6 caracteres';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 20.h),
+                      SizedBox(
+                        height: 48.h,
+                        child: ElevatedButton(
+                          onPressed: _loading ? null : _submit,
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: _loading
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(_isRegister ? 'Cadastrar' : 'Entrar'),
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      TextButton(
+                        onPressed: _loading
+                            ? null
+                            : () => setState(() => _isRegister = !_isRegister),
+                        child: Text(
+                          _isRegister
+                              ? 'Já tem conta? Entrar'
+                              : 'Ainda não tem conta? Cadastrar',
                         ),
                       ),
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
-                      // Alterna o estado do cadastro
-                      setState(() {
-                        cadastro = !cadastro;
-                      });
-                    },
-                    child: const Text('Criar conta'),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                ElevatedButton(
-                  onPressed: () {
-                    //função para lidar com as informações do forms
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    elevation: 6,
-                    shadowColor: Colors.black.withOpacity(0.2),
-                    backgroundColor: Colors.grey[300],
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 15,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Text((cadastro) ? 'Entrar' : 'Cadastrar'),
-                ),
-              ],
+              ),
             ),
           ),
         ),

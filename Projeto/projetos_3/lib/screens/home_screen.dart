@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text('Home Screen', style: TextStyle(fontSize: 50.sp)),
       ),
 
-      bottomNavigationBar: Navbar(),
+      bottomNavigationBar: const Navbar(currentRoute: "/home"),
     );
   }
 }

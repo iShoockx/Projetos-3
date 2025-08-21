@@ -59,7 +59,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_controller.text.isNotEmpty) {
-                      setState(() {
+                      setState(() { // padrao para adicionar itens a lista
                         produtos.add(
                           Produto(
                             id: DateTime.now().toString(),
@@ -67,7 +67,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
                             quantidade: 1,
                           ),
                         );
-                        _controller.clear();
+                        _controller.clear(); // limpa o campo após adicionar
                       });
                     }
                   },
@@ -89,8 +89,8 @@ class _InventarioScreenState extends State<InventarioScreen> {
 
             // Lista de produtos
             SizedBox(
-              height: 65.h * 4, // altura de 5 itens
-              child: Container(
+              height: 68.h * 4, // altura de 5 itens
+              child: Container( 
                 decoration: BoxDecoration(
                   color: Colors.lightBlue.shade100,
                   borderRadius: BorderRadius.circular(12.r),
@@ -115,7 +115,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
         ),
       ),
 
-      bottomNavigationBar: Navbar(),
+      bottomNavigationBar: const Navbar(currentRoute: "/inventario"),
     );
   }
 }

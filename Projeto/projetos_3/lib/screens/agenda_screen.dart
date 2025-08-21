@@ -38,7 +38,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         ),
       ),
 
-      bottomNavigationBar: Navbar(),
+      bottomNavigationBar: const Navbar(currentRoute: "/agenda"),
     );
   }
 }

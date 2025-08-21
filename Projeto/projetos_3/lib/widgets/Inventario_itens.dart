@@ -2,76 +2,82 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projetos_3/models/produto.dart';
 
-class InventarioItens extends StatefulWidget {
+class InventarioItens extends StatelessWidget {
   final Produto produto;
 
-  const InventarioItens({super.key, required this.produto});
-
-  @override
-  State<InventarioItens> createState() => _InventarioItensState();
-}
-
-class _InventarioItensState extends State<InventarioItens> {
-  late int quantidade;
-
-  @override
-  void initState() {
-    super.initState();
-    quantidade = widget.produto.quantidade; // inicia com a quantidade do produto
-  }
+  const InventarioItens({
+    Key? key,
+    required this.produto,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60.h,
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.black, width: 1.0)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 100.w,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.produto.nome,
-                    style: const TextStyle(fontWeight: FontWeight.w800)),
-                Text(quantidade.toString(),
-                    style: const TextStyle(fontSize: 12)),
-              ],
+    return ListTile(
+      title: Text(produto.nome),
+      subtitle: Text('Quantidade: ${produto.quantidade}'),
+      trailing: Padding(
+        padding: const EdgeInsets.only(left: 16.0), // espaçamento à direita),
+        child: Row(
+          
+          mainAxisSize: MainAxisSize.min, // evita ocupar todo o espaço
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                // Ação para editar o item
+                TextEditingController controller =
+                    TextEditingController(text: produto.nome);
+                TextEditingController quantityController =
+                    TextEditingController(text: produto.quantidade.toString());
+        
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Editar Produto'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: controller,
+                            decoration:
+                                InputDecoration(labelText: 'Nome do Produto'),
+                          ),
+                          TextField(
+                            controller: quantityController,
+                            decoration: InputDecoration(labelText: 'Quantidade'),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            // Ação para salvar as alterações
+                            // Aqui você pode atualizar os valores do produto
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Salvar'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
-          ),
-
-          // Botão de +
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                quantidade++;
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: EdgeInsets.all(8.w),
-              backgroundColor:Colors.transparent,
+            IconButton(
+              icon: Icon(Icons.delete, color: Colors.black),
+              onPressed: () {
+                // Ação para remover o item
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${produto.nome} removido do inventário'),
+                  ),
+                );
+              },
             ),
-            child: const Text('+'),
-          ),
-
-          // Botão de -
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                if (quantidade > 0) quantidade--;
-              });
-            },
-            child: const Text('-'),
-          ),
-
-          const Icon(Icons.delete),
-        ],
+          ],
+        ),
       ),
     );
   }
