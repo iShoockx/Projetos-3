@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projetos_3/models/produto.dart';
 
 class InventarioItens extends StatelessWidget {
@@ -12,16 +13,15 @@ class InventarioItens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 6), // controla espaço lateral
       title: Text(produto.nome),
       subtitle: Text('Quantidade: ${produto.quantidade}'),
-      trailing: Padding(
-        padding: const EdgeInsets.only(left: 16.0), // espaçamento à direita),
-        child: Row(
-          
+      
+      trailing:  Row(
           mainAxisSize: MainAxisSize.min, // evita ocupar todo o espaço
           children: [
             IconButton(
-              icon: Icon(Icons.edit, color: Colors.blue),
+              icon: Icon(Icons.edit, color: Colors.black),// Ícone de edição
               onPressed: () {
                 // Ação para editar o item
                 TextEditingController controller = TextEditingController(text: produto.nome);
@@ -62,7 +62,8 @@ class InventarioItens extends StatelessWidget {
                 );
               },
             ),
-            IconButton(
+            // Botão de delete
+            IconButton( 
               icon: Icon(Icons.delete, color: Colors.black),
               onPressed: () {
                 // Ação para remover o item
@@ -75,7 +76,6 @@ class InventarioItens extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
