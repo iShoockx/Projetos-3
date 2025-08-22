@@ -37,7 +37,7 @@ class Navbar extends StatelessWidget {
             _buildNavItem(context,
                 icon: Icons.event_note_outlined,
                 activeIcon: Icons.event_note,
-                route: '/agenda',
+                route: '/Lembrete',
                 label: "Lembrete"),
             _buildNavItem(context,
                 icon: Icons.person_outline,

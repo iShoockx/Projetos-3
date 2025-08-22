@@ -4,7 +4,7 @@ import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/inventario_screen.dart';
-import 'screens/agenda_screen.dart';
+import 'screens/Lembrete_screen.dart';
 import 'screens/andamento_screen.dart';
 
 
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/home': (context) => const HomeScreen(),
           '/inventario': (context) => const InventarioScreen(),
-          '/agenda': (context) => const AgendaScreen(),
+          '/Lembrete': (context) => const LembreteScreen(),
           '/andamento': (context) => const AndamentoScreen(),
         },
       ),

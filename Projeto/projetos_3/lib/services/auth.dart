@@ -6,11 +6,9 @@ import '../models/usuario.dart';
 
 /// Serviço de autenticação + persistência do perfil no Firestore.
 class AuthService {
-  AuthService({
-    fb_auth.FirebaseAuth? auth,
-    FirebaseFirestore? db,
-  })  : _auth = auth ?? fb_auth.FirebaseAuth.instance,
-        _db = db ?? FirebaseFirestore.instance;
+  AuthService({fb_auth.FirebaseAuth? auth, FirebaseFirestore? db})
+    : _auth = auth ?? fb_auth.FirebaseAuth.instance,
+      _db = db ?? FirebaseFirestore.instance;
 
   final fb_auth.FirebaseAuth _auth;
   final FirebaseFirestore _db;
@@ -23,7 +21,10 @@ class AuthService {
   /// criando o doc no Firestore se não existir.
   Future<AppUser?> _userFromFirebase(fb_auth.User? user) async {
     if (user == null) return null;
-    final ref = _db.collection('users').doc(user.uid).withConverter<AppUser>(
+    final ref = _db
+        .collection('users')
+        .doc(user.uid)
+        .withConverter<AppUser>(
           fromFirestore: (snap, _) => AppUser.fromFirestore(snap),
           toFirestore: (appUser, _) => appUser.toMap(),
         );
@@ -44,7 +45,6 @@ class AuthService {
 
     await ref.set(appUser, SetOptions(merge: true));
     await ref.update({'createdAt': FieldValue.serverTimestamp()});
-
 
     return appUser;
   }
@@ -76,7 +76,9 @@ class AuthService {
 
     final ref = _db.collection('users').doc(appUser.id);
     await ref.set(appUser.toMap(), SetOptions(merge: true));
-    await ref.set({'createdAt': FieldValue.serverTimestamp()}, SetOptions(merge: true));
+    await ref.set({
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
 
     return appUser;
   }
@@ -116,7 +118,10 @@ class AuthService {
     if (celular != null) data['celular'] = celular;
     if (role != null) data['role'] = role.name;
 
-    await _db.collection('users').doc(user.uid).set(data, SetOptions(merge: true));
+    await _db
+        .collection('users')
+        .doc(user.uid)
+        .set(data, SetOptions(merge: true));
   }
 
   fb_auth.User? get firebaseUser => _auth.currentUser;

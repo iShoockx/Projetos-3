@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:projetos_3/cache/user_cache.dart';
 import 'package:projetos_3/widgets/inventario_itens.dart';
 import 'package:projetos_3/widgets/appbar.dart';
 import 'package:projetos_3/widgets/navbar.dart';
 import 'package:projetos_3/models/produto.dart';
+import 'package:projetos_3/services/itens.dart';
 
 class InventarioScreen extends StatefulWidget {
   const InventarioScreen({super.key});
@@ -12,21 +14,27 @@ class InventarioScreen extends StatefulWidget {
   State<InventarioScreen> createState() => _InventarioScreenState();
 }
 
-class _InventarioScreenState extends State<InventarioScreen> {
-  // Lista inicial de produtos
-  final List<Produto> produtos = [
-    Produto(id: '1', nome: 'Chave de fenda', quantidade: 10),
-    Produto(id: '2', nome: 'Martelo', quantidade: 5),
-    Produto(id: '3', nome: 'Alicate', quantidade: 7),
-  ];
 
+
+class _InventarioScreenState extends State<InventarioScreen> {
   final TextEditingController _controller_search = TextEditingController();
+
+  // Future<List<Map<String, dynamic>>> pesquisarItens(String query) async {
+  //   final snapshot =
+  //       await getItens().first; // pega o snapshot atual do Firebase
+  //   return snapshot
+  //       .where(
+  //         (item) => item['nome'].toString().toLowerCase().contains(
+  //           query.toLowerCase(),
+  //         ),
+  //       )
+  //       .toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
@@ -34,7 +42,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
             children: [
               SizedBox(height: 20.h),
 
-              // Área do input
+              // Input de pesquisa
               Row(
                 children: [
                   Expanded(
@@ -48,12 +56,17 @@ class _InventarioScreenState extends State<InventarioScreen> {
                       ),
                     ),
                   ),
-
                   SizedBox(width: 20.w),
-
                   ElevatedButton(
-                    onPressed: () {
-                      if (_controller_search.text.isNotEmpty) {}
+                    onPressed: () async {
+                      // final query = _controller_search.text.trim();
+                      // if (query.isNotEmpty) return;
+                      // final resultados = await pesquisarItens(query);
+
+                      // setState(() {
+                      //   // Exemplo: armazenar em uma variável 'produtosFiltrados'
+                      //   // produtosFiltrados = resultados.map((e) => Produto.fromMap(e)).toList();
+                      // });
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 6,
@@ -71,7 +84,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
 
               SizedBox(height: 40.h),
 
-              // Lista de produtos
+              // Lista de produtos do Firebase
               SizedBox(
                 height: 72.h * 5,
                 child: Container(
@@ -86,19 +99,55 @@ class _InventarioScreenState extends State<InventarioScreen> {
                       ),
                     ],
                   ),
-                  child: ListView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    itemCount: produtos.length,
-                    itemBuilder: (context, index) {
-                      return InventarioItens(produto: produtos[index]);
+                  child: StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: getItens(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text("Erro: ${snapshot.error}"));
+                      }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text("Nenhum item encontrado"),
+                        );
+                      }
+
+                      // Converte Maps do Firebase para Model Produto
+                      final produtos = snapshot.data!
+                          .map((item) => Produto.fromMap(item))
+                          .toList();
+                      
+                      return ListView.builder(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 10.h,
+                        ),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final item = snapshot.data![index]; // <-- Map do Firebase
+                          
+                          
+                          // return InventarioItens(
+                            
+                          //   produto: Produto(
+                          //     id: item['id_item'] ?? '',
+                          //     nome: item['nome'] ?? 'Sem nome',
+                          //     quantidade: (item['quantidade'] ?? 0) as int, 
+                          //     userID: userId,
+                              
+                          //   ),
+                          // );
+                        },
+                      );
                     },
                   ),
                 ),
               ),
+
               SizedBox(height: 20.h),
+
               // Botão adicionar item
               TextButton(
                 style: TextButton.styleFrom(
@@ -106,7 +155,6 @@ class _InventarioScreenState extends State<InventarioScreen> {
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                    // Define o formato do botão
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -120,19 +168,19 @@ class _InventarioScreenState extends State<InventarioScreen> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text('Adicionar Produto'),
+                        title: const Text('Adicionar Produto'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextField(
                               controller: nomeController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Nome do Produto',
                               ),
                             ),
                             TextField(
                               controller: quantidadeController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Quantidade',
                               ),
                               keyboardType: TextInputType.number,
@@ -141,7 +189,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               String nome = nomeController.text.trim();
                               int? quantidade = int.tryParse(
                                 quantidadeController.text,
@@ -150,32 +198,46 @@ class _InventarioScreenState extends State<InventarioScreen> {
                               if (nome.isNotEmpty &&
                                   quantidade != null &&
                                   quantidade > 0) {
-                                setState(() {
-                                  final indexExistente = produtos.indexWhere(
-                                    (p) =>
-                                        p.nome.toLowerCase() ==
-                                        nome.toLowerCase(),
-                                  );
+                                // 1️⃣ Pega lista atual do Firebase
+                                final snapshot = await getItens().first;
 
-                                  if (indexExistente != -1) {
-                                    // se já existe, só soma a quantidade
-                                    // produtos[indexExistente].quantidade +=
-                                    //     quantidade;
+                                // 2️⃣ Procura se já existe produto com mesmo nome
+                                final encontrados = snapshot
+                                    .where(
+                                      (item) =>
+                                          item['nome']
+                                              .toString()
+                                              .toLowerCase() ==
+                                          nome.toLowerCase(),
+                                    )
+                                    .toList();
+
+                                if (encontrados.isNotEmpty) {
+                                  final existente = encontrados.first;
+                                  final id = existente['id_item'];
+
+                                  if (id != null && id is String) {
+                                    final novaQuantidade =
+                                        (existente['quantidade'] ?? 0) +
+                                        quantidade;
+                                    await updateItem(id, nome, novaQuantidade);
                                   } else {
-                                    // Se nao existir, adiciona novo produto
-                                    produtos.add(
-                                      Produto(
-                                        id: DateTime.now().toString(),
-                                        nome: nome,
-                                        quantidade: quantidade,
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Erro ao identificar o item no banco de dados.",
+                                        ),
                                       ),
                                     );
                                   }
-                                });
+                                } else {
+                                  addItem(nome, quantidade);
+                                }
+
                                 Navigator.of(context).pop();
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text(
                                       "Preencha os campos corretamente",
                                     ),
@@ -183,20 +245,19 @@ class _InventarioScreenState extends State<InventarioScreen> {
                                 );
                               }
                             },
-                            child: Text('Salvar'),
+                            child: const Text('Salvar'),
                           ),
                         ],
                       );
                     },
                   );
                 },
-                child: Text("Adicionar Item"),
+                child: const Text("Adicionar Item"),
               ),
             ],
           ),
         ),
       ),
-
       bottomNavigationBar: const Navbar(currentRoute: "/inventario"),
     );
   }

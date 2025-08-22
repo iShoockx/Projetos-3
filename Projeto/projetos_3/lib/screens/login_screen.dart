@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../services/auth.dart';
 import '../models/usuario.dart';
+import '../cache/user_cache.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,13 +34,16 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  /// NOVO MÉTODO _submit COM ARMAZENAMENTO DO UID
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
 
     try {
+      AppUser user;
+
       if (_isRegister) {
-        await _auth.signUp(
+        user = await _auth.signUp(
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
           password: _passwordController.text,
@@ -48,16 +52,24 @@ class _LoginScreenState extends State<LoginScreen> {
               : _celularController.text.trim(),
           role: UserRole.cliente,
         );
+
+        // ✅ Salva UID no cache após cadastro
+        await UserCache.saveUid(user.id);
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Cadastro realizado com sucesso!')),
           );
         }
       } else {
-        await _auth.signIn(
+        user = await _auth.signIn(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
+
+        // ✅ Salva UID no cache após login
+        await UserCache.saveUid(user.id);
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login realizado com sucesso!')),
@@ -65,7 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
 
-      // TODO: Navegar para sua home após autenticar:
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } on Exception catch (e) {
@@ -78,7 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String _firebaseErrorMessage(String raw) {
-    // mapeia algumas mensagens comuns do FirebaseAuth
     if (raw.contains('email-already-in-use')) {
       return 'E-mail já está em uso.';
     } else if (raw.contains('invalid-email')) {
@@ -86,7 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (raw.contains('weak-password')) {
       return 'Senha fraca. Use 6+ caracteres.';
     } else if (raw.contains('user-not-found') ||
-        raw.contains('wrong-password')) {
+        raw.contains('wrong-password') ||
+        raw.contains('invalid-credential')) {
       return 'E-mail ou senha incorretos.';
     } else if (raw.contains('network-request-failed')) {
       return 'Falha de rede. Verifique sua conexão.';

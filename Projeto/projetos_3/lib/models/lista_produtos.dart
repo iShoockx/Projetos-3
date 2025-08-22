@@ -1,27 +1,23 @@
 class ListaProdutos {
   final String listaID;
-  final String produtoID;
-  final int quantidade;
+  final String userID;
 
   ListaProdutos({
     required this.listaID,
-    required this.produtoID,
-    required this.quantidade,
+    required this.userID,
   });
 
   factory ListaProdutos.fromMap(Map<String, dynamic> map) {
     return ListaProdutos(
       listaID: map['listaID'],
-      produtoID: map['produtoID'],
-      quantidade: map['quantidade'],
+      userID: map['userID'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'listaID': listaID,
-      'produtoID': produtoID,
-      'quantidade': quantidade,
+      'userID': userID,
     };
   }
 }
