@@ -13,9 +13,6 @@ UserRole userRoleFromString(String value) {
 
 String userRoleToString(UserRole role) => role.name;
 
-/// Modelo seguro de usuário da aplicação.
-/// OBS: Senha **não** deve ser salva no Firestore. A senha é gerenciada
-/// pelo Firebase Authentication. Nunca armazene senha em texto puro.
 class AppUser {
   final String id; // uid do Firebase Auth
   final String name;

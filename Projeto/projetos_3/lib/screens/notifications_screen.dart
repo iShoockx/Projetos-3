@@ -114,7 +114,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
 
     if (_lembretes.isEmpty) {
-      return const Scaffold(
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'NOTIFICAÇÕES',
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 2,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         body: Center(child: Text('Nenhum lembrete encontrado.')),
       );
     }
@@ -165,16 +177,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   color: Colors.red,
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                onDismissed: (_) {
+                onDismissed: (_) async {
                   if (id != null) {
-                    _deletarLembreteNaTela(id);
+                    await _deletarLembreteNaTela(id);
                   }
                 },
                 child: NotificacaoItem(
+                  id: id,
                   titulo: titulo,
                   descricao: descricao,
                   tempo: tempo,
                   importante: importante,
+                  onDelete: () async {
+                    await _carregarLembretes();
+                  },
                 ),
               );
             },

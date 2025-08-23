@@ -5,7 +5,8 @@ import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/inventario_screen.dart';
 import 'screens/Lembrete_screen.dart';
-import 'screens/andamento_screen.dart';
+import 'screens/usuario_screen.dart';
+import 'services/auth.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -32,7 +33,9 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomeScreen(),
           '/inventario': (context) => const InventarioScreen(),
           '/Lembrete': (context) => const LembreteScreen(),
-          '/andamento': (context) => const AndamentoScreen(),
+          '/usuario': (context) => UsuarioScreen(authService: AuthService()),
+
+
         },
       ),
     );

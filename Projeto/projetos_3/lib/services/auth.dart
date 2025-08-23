@@ -124,5 +124,34 @@ class AuthService {
         .set(data, SetOptions(merge: true));
   }
 
+  /// Retorna o AppUser atual ou null se não autenticado
+  /// Retorna o AppUser atual ou null se não autenticado
+  Future<AppUser?> get currentUser async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+
+    final doc = await _db
+        .collection('users')
+        .doc(user.uid)
+        .withConverter<AppUser>(
+          fromFirestore: (snap, _) => AppUser.fromFirestore(snap),
+          toFirestore: (appUser, _) => appUser.toMap(),
+        )
+        .get();
+
+    return doc.data();
+  }
+  Future<void> updateEmail(String email) async {
+      final user = _auth.currentUser;
+      if (user == null) throw Exception('Não autenticado.');
+
+      // await user.updateEmail(email);
+
+      await _db.collection('users').doc(user.uid).set({
+        'email': email,
+      }, SetOptions(merge: true));
+    }
   fb_auth.User? get firebaseUser => _auth.currentUser;
 }
+
+

@@ -35,26 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton(
-              style: TextButton.styleFrom(
-                minimumSize: Size(200.w, 200.h),
-                backgroundColor: const Color.fromARGB(255, 241, 185, 204),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100.r),
-                ),
-              ),
-              onPressed: () async {
-                Navigator.pushNamed(context, "/login");
-              },
-              child: const Text("Botão do Rafael"),
+            Text(
+              'Bem-vindo ao Home Screen!',
+              style: TextStyle(fontSize: 24.sp),
             ),
             SizedBox(height: 20.h),
-            Text(
-              _uid != null ? "UID do usuário: $_uid" : "Carregando UID...",
-              style: TextStyle(fontSize: 16.sp),
-              textAlign: TextAlign.center,
-            ),
+          
           ],
         ),
       ),

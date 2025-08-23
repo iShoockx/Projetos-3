@@ -42,7 +42,7 @@ class Navbar extends StatelessWidget {
             _buildNavItem(context,
                 icon: Icons.person_outline,
                 activeIcon: Icons.person,
-                route: '/andamento',
+                route: '/usuario',
                 label: "Perfil"),
           ],
         ),

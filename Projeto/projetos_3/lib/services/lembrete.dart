@@ -61,9 +61,12 @@ class LembreteService {
     }
   }
 
-  /// Deleta um lembrete pelo ID
-  Future<void> deletarLembrete(String id) async {
+  /// Deleta um lembrete pelo ID (agora aceita String?)
+  Future<void> deletarLembrete(String? id) async {
     try {
+      if (id == null || id.isEmpty) {
+        throw Exception('ID do lembrete é inválido');
+      }
       await _lembretesCollection.doc(id).delete();
     } catch (e) {
       throw Exception('Erro ao deletar lembrete: $e');

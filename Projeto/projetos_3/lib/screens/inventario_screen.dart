@@ -17,11 +17,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
   final TextEditingController _controllerSearch = TextEditingController();
   String query = "";
 
-  // @override
-  // void initState(){
-  //   super.initState()
-  //   final user =
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
