@@ -6,7 +6,12 @@ class LembreteService {
       .collection('Lembretes');
 
   /// Adiciona um lembrete com título, data/hora e userID do cache
-  Future<void> adicionarLembrete(String titulo, DateTime dataHora) async {
+  Future<void> adicionarLembrete(
+    String titulo,
+    String descricao,
+    DateTime dataHora,
+    bool isImportant,
+  ) async {
     try {
       final userId = await UserCache.getUid();
       if (userId == null) {
@@ -15,8 +20,10 @@ class LembreteService {
 
       await _lembretesCollection.add({
         'titulo': titulo,
+        'descricao': descricao,
         'data': Timestamp.fromDate(dataHora),
         'userID': userId,
+        'importante': isImportant,
       });
     } catch (e) {
       throw Exception('Erro ao adicionar lembrete: $e');
@@ -35,9 +42,11 @@ class LembreteService {
           .where('userID', isEqualTo: userId)
           .get();
 
-      final lembretes = query.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+      final lembretes = query.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // adiciona o ID do documento
+        return data;
+      }).toList();
 
       // Ordena manualmente por data (mais recente primeiro)
       lembretes.sort((a, b) {

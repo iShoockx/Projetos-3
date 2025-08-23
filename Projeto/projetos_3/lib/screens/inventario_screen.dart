@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projetos_3/cache/user_cache.dart';
 import 'package:projetos_3/widgets/inventario_itens.dart';
 import 'package:projetos_3/widgets/appbar.dart';
 import 'package:projetos_3/widgets/navbar.dart';
@@ -16,6 +15,13 @@ class InventarioScreen extends StatefulWidget {
 
 class _InventarioScreenState extends State<InventarioScreen> {
   final TextEditingController _controllerSearch = TextEditingController();
+  String query = "";
+
+  // @override
+  // void initState(){
+  //   super.initState()
+  //   final user =
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -39,24 +45,13 @@ class _InventarioScreenState extends State<InventarioScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
+                    onChanged: (value) {
+                      // se quiser pesquisa em tempo real
+                      setState(() {
+                        query = value.toLowerCase();
+                      });
+                    },
                   ),
-                ),
-                SizedBox(width: 20.w),
-                ElevatedButton(
-                  onPressed: () {
-                    // Aqui você pode implementar o filtro chamando setState
-                    // com base no texto do _controllerSearch
-                  },
-                  style: ElevatedButton.styleFrom(
-                    elevation: 6,
-                    shadowColor: Colors.black.withOpacity(0.2),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Icon(Icons.search, size: 16.sp),
                 ),
               ],
             ),
@@ -97,14 +92,25 @@ class _InventarioScreenState extends State<InventarioScreen> {
                         .map((item) => Produto.fromMap(item))
                         .toList();
 
+                    // 🔎 aplica o filtro
+                    final filtrados = produtos.where((produto) {
+                      return produto.nome.toLowerCase().contains(query);
+                    }).toList();
+
+                    if (filtrados.isEmpty) {
+                      return const Center(
+                        child: Text("Nenhum item encontrado"),
+                      );
+                    }
+
                     return ListView.builder(
                       padding: EdgeInsets.symmetric(
                         horizontal: 20.w,
                         vertical: 10.h,
                       ),
-                      itemCount: produtos.length,
+                      itemCount: filtrados.length,
                       itemBuilder: (context, index) {
-                        return InventarioItens(produto: produtos[index]);
+                        return InventarioItens(produto: filtrados[index]);
                       },
                     );
                   },
@@ -115,6 +121,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
             SizedBox(height: 20.h),
 
             // Botão adicionar item
+            // (mantive igual ao que você já tinha)
             TextButton(
               style: TextButton.styleFrom(
                 minimumSize: Size(130.w, 40.h),
@@ -128,7 +135,6 @@ class _InventarioScreenState extends State<InventarioScreen> {
                 TextEditingController nomeController = TextEditingController();
                 TextEditingController quantidadeController =
                     TextEditingController(text: "1");
-
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -156,32 +162,27 @@ class _InventarioScreenState extends State<InventarioScreen> {
                         TextButton(
                           onPressed: () async {
                             String nome = nomeController.text.trim();
-                            int? quantidade =
-                                int.tryParse(quantidadeController.text);
-
+                            int? quantidade = int.tryParse(
+                              quantidadeController.text,
+                            );
                             if (nome.isNotEmpty &&
                                 quantidade != null &&
                                 quantidade > 0) {
                               final snapshot = await getItens().first;
-
                               final encontrados = snapshot
                                   .where(
                                     (item) =>
-                                        item['nome']
-                                            .toString()
-                                            .toLowerCase() ==
+                                        item['nome'].toString().toLowerCase() ==
                                         nome.toLowerCase(),
                                   )
                                   .toList();
-
                               if (encontrados.isNotEmpty) {
                                 final existente = encontrados.first;
                                 final id = existente['id_item'];
-
                                 if (id != null && id is String) {
                                   final novaQuantidade =
                                       (existente['quantidade'] ?? 0) +
-                                          quantidade;
+                                      quantidade;
                                   await updateItem(id, nome, novaQuantidade);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -195,7 +196,6 @@ class _InventarioScreenState extends State<InventarioScreen> {
                               } else {
                                 addItem(nome, quantidade);
                               }
-
                               Navigator.of(context).pop();
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

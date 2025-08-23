@@ -22,16 +22,27 @@ Future<void> addItem(String nome, int quantidade) async {
 
 
 /// READ
-Stream<List<Map<String, dynamic>>> getItens() {
-  return db.collection('Itens').snapshots().map(
-    (snapshot) => snapshot.docs.map(
-      (doc) => {
-        'id_item': doc.id,         // <-- aqui pega o id aleatório do Firebase
-        ...doc.data(),        // <-- aqui espalha os outros campos do doc
-      },
-    ).toList(),
-  );
+/// READ - apenas itens do usuário logado
+Stream<List<Map<String, dynamic>>> getItens() async* {
+  final userId = await UserCache.getUid(); // ✅ pega UID do cache
+  if (userId == null) {
+    throw Exception('Usuário não encontrado no cache.');
+  }
+
+  yield* db
+      .collection('Itens')
+      .where('userID', isEqualTo: userId) // 🔎 filtro
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(
+          (doc) => {
+            'id_item': doc.id,
+            ...doc.data(),
+          },
+        ).toList(),
+      );
 }
+
 
 /// UPDATE
 Future<void> updateItem(String id, String novoNome, int novaQuantidade) async {
