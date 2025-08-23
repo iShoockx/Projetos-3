@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projetos_3/widgets/appbar.dart';
-import 'package:projetos_3/widgets/navbar.dart';
+import '../widgets/appbar.dart';
+import '../widgets/navbar.dart';
 
 class AndamentoScreen extends StatelessWidget {
   const AndamentoScreen({super.key});
