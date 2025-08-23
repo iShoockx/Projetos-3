@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projetos_3/cache/user_cache.dart';
+import '../cache/user_cache.dart';
 
 final db = FirebaseFirestore.instance;
 

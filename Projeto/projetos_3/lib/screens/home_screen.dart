@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projetos_3/widgets/appbar.dart';
-import 'package:projetos_3/widgets/navbar.dart';
-import 'package:projetos_3/cache/user_cache.dart'; // ⬅️ Certifique-se de importar isso
+import '../widgets/appbar.dart';
+import '../widgets/navbar.dart';
+import '../cache/user_cache.dart'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
