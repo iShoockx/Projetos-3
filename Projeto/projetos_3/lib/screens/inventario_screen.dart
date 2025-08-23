@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projetos_3/widgets/inventario_itens.dart';
-import 'package:projetos_3/widgets/appbar.dart';
-import 'package:projetos_3/widgets/navbar.dart';
-import 'package:projetos_3/models/produto.dart';
-import 'package:projetos_3/services/itens.dart';
+import '../widgets/inventario_itens.dart';
+import '../widgets/appbar.dart';
+import '../widgets/navbar.dart';
+import '../models/produto.dart';
+import '../services/itens.dart';
 
 class InventarioScreen extends StatefulWidget {
   const InventarioScreen({super.key});
