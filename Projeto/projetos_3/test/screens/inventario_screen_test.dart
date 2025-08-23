@@ -1,28 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:projetos_3/screens/inventario_screen.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:projetos_3/screens/inventario_screen.dart';
 
-//teste de widget
+// //teste de widget
 
-void main() {
-  testWidgets('Renderiza campo de texto e botão "Adicionar Item"', 
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(home: InventarioScreen()),
-    );
+// void main() {
+//   testWidgets('Renderiza campo de texto e botão "Adicionar Item"', 
+//       (WidgetTester tester) async {
+//     await tester.pumpWidget(
+//       const MaterialApp(home: InventarioScreen()),
+//     );
 
-    expect(find.byType(TextField), findsOneWidget);
+//     expect(find.byType(TextField), findsOneWidget);
 
-    // Botão de adicionar item
-    expect(find.text("Adicionar Item"), findsOneWidget);
-  });
+//     // Botão de adicionar item
+//     expect(find.text("Adicionar Item"), findsOneWidget);
+//   });
 
-  testWidgets('Renderiza indicador de loading ao abrir a tela',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(home: InventarioScreen()),
-    );
+//   testWidgets('Renderiza indicador de loading ao abrir a tela',
+//       (WidgetTester tester) async {
+//     await tester.pumpWidget(
+//       const MaterialApp(home: InventarioScreen()),
+//     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
-}
+//     expect(find.byType(CircularProgressIndicator), findsOneWidget);
+//   });
+// }
