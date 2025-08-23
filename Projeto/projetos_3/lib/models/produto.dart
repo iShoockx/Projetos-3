@@ -1,6 +1,5 @@
 class Produto {
   final String id;
-
   final String nome;
   final int quantidade;
   final String userID;
@@ -14,10 +13,12 @@ class Produto {
 
   factory Produto.fromMap(Map<String, dynamic> map) {
     return Produto(
-      id: map['id'],
-      nome: map['nome'],
-      quantidade: map['quantidade'],
-      userID: map['userID'] ?? '', // Adicionando userID como campo opcional
+      id: map['id']?.toString() ?? '', // Garantindo que id seja uma String
+      nome: map['nome']?.toString() ?? '',
+      quantidade: (map['quantidade'] is int)
+        ? map['quantidade']
+        : int.tryParse(map['quantidade']?.toString() ?? '0') ?? 0,
+      userID: map['userID']!.toString() ?? '', // Adicionando userID como campo opcional
     );
   }
 
