@@ -88,7 +88,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
                         .map((item) => Produto.fromMap(item))
                         .toList();
 
-                    // 🔎 aplica o filtro
+                    // aplica o filtro
                     final filtrados = produtos.where((produto) {
                       return produto.nome.toLowerCase().contains(query);
                     }).toList();
@@ -117,7 +117,6 @@ class _InventarioScreenState extends State<InventarioScreen> {
             SizedBox(height: 20.h),
 
             // Botão adicionar item
-            // (mantive igual ao que você já tinha)
             TextButton(
               style: TextButton.styleFrom(
                 minimumSize: Size(130.w, 40.h),

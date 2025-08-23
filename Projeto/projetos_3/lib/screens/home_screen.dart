@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Bem-vindo ao Home Screen!',
+              'Bem-vindo!',
               style: TextStyle(fontSize: 24.sp),
             ),
             SizedBox(height: 20.h),

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../cache/user_cache.dart';
 
 class LembreteService {
-  final CollectionReference _lembretesCollection = FirebaseFirestore.instance
+  final CollectionReference lembretesCollection = FirebaseFirestore.instance
       .collection('Lembretes');
 
   /// Adiciona um lembrete com título, data/hora e userID do cache
@@ -18,7 +18,7 @@ class LembreteService {
         throw Exception('Usuário não encontrado no cache.');
       }
 
-      await _lembretesCollection.add({
+      await lembretesCollection.add({
         'titulo': titulo,
         'descricao': descricao,
         'data': Timestamp.fromDate(dataHora),
@@ -38,7 +38,7 @@ class LembreteService {
         throw Exception('Usuário não encontrado no cache.');
       }
 
-      final query = await _lembretesCollection
+      final query = await lembretesCollection
           .where('userID', isEqualTo: userId)
           .get();
 
@@ -67,7 +67,7 @@ class LembreteService {
       if (id == null || id.isEmpty) {
         throw Exception('ID do lembrete é inválido');
       }
-      await _lembretesCollection.doc(id).delete();
+      await lembretesCollection.doc(id).delete();
     } catch (e) {
       throw Exception('Erro ao deletar lembrete: $e');
     }

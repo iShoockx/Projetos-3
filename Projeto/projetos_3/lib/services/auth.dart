@@ -124,8 +124,7 @@ class AuthService {
         .set(data, SetOptions(merge: true));
   }
 
-  /// Retorna o AppUser atual ou null se não autenticado
-  /// Retorna o AppUser atual ou null se não autenticado
+  /// Retorna AppUser atual ou null se não auteticado
   Future<AppUser?> get currentUser async {
     final user = _auth.currentUser;
     if (user == null) return null;

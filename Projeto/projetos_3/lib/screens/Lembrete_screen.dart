@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../widgets/appbar.dart';
-import '../services/lembrete.dart';
-import '../widgets/navbar.dart';
+import 'package:projetos_3/widgets/appbar.dart';
+import 'package:projetos_3/services/lembrete.dart';
+import 'package:projetos_3/widgets/navbar.dart';
 
 class LembreteScreen extends StatefulWidget {
   const LembreteScreen({super.key});

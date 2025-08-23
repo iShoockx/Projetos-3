@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  /// NOVO MÉTODO _submit COM ARMAZENAMENTO DO UID
+  ///MÉTODO _submit COM ARMAZENAMENTO DO UID
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           role: UserRole.cliente,
         );
 
-        // ✅ Salva UID no cache após cadastro
+        // Salva UID no cache
         await UserCache.saveUid(user.id);
 
         if (mounted) {
@@ -67,7 +67,6 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text,
         );
 
-        // ✅ Salva UID no cache após login
         await UserCache.saveUid(user.id);
 
         if (mounted) {

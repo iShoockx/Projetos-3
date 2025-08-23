@@ -22,7 +22,6 @@ Future<void> addItem(String nome, int quantidade) async {
 
 
 /// READ
-/// READ - apenas itens do usuário logado
 Stream<List<Map<String, dynamic>>> getItens() async* {
   final userId = await UserCache.getUid(); // ✅ pega UID do cache
   if (userId == null) {
