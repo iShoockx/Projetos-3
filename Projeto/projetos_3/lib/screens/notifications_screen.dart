@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projetos_3/widgets/Notificacao_itens.dart';
-import 'package:projetos_3/services/lembrete.dart';
+import '../widgets/Notificacao_itens.dart';
+import '../services/lembrete.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
