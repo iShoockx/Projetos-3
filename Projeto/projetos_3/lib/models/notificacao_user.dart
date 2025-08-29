@@ -1,3 +1,4 @@
+/// Modelagem da NotificacaoUser para armazenamento no banco
 class NotificacaoUser {
   //Campos tabela
   final int idUser;

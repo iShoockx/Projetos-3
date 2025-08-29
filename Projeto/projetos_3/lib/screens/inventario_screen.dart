@@ -6,6 +6,26 @@ import '../widgets/navbar.dart';
 import '../models/produto.dart';
 import '../services/itens.dart';
 
+
+/// Tela de Inventário - Gerenciamento de Produtos
+/// 
+/// Esta tela exibe uma lista de produtos do inventário com funcionalidades de:
+/// - Listagem de itens em tempo real
+/// - Pesquisa/filtro de produtos
+/// - Adição de novos produtos
+/// - Atualização de quantidades existentes
+/// 
+/// **Funcionalidades:**
+/// - Conexão em tempo real com Firebase Firestore
+/// - Interface responsiva com ScreenUtil
+/// - Sistema de busca em tempo real
+/// - Modal para adicionar/editar produtos
+/// - Integração com barra de navegação inferior
+/// 
+/// **Uso:**
+/// - Tela principal de gerenciamento de inventário
+/// - Acesso através da rota "/inventario"
+
 class InventarioScreen extends StatefulWidget {
   const InventarioScreen({super.key});
 
@@ -16,8 +36,6 @@ class InventarioScreen extends StatefulWidget {
 class _InventarioScreenState extends State<InventarioScreen> {
   final TextEditingController _controllerSearch = TextEditingController();
   String query = "";
-
-  
 
   @override
   Widget build(BuildContext context) {

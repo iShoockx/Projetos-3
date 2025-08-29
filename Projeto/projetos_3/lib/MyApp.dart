@@ -8,18 +8,27 @@ import 'screens/Lembrete_screen.dart';
 import 'screens/usuario_screen.dart';
 import 'services/auth.dart';
 
-
+/// Widget raiz do aplicativo.
+///
+/// - Define a **configuração global** do app (tema, título e estilo).
+/// - Inicializa o [ScreenUtilInit] para ajustar dimensões e textos
+///   de acordo com diferentes tamanhos de tela.
+/// - Configura as **rotas de navegação** usadas em todo o app:
+///   - `/` → [SplashScreen]
+///   - `/login` → [LoginScreen]
+///   - `/home` → [HomeScreen]
+///   - `/inventario` → [InventarioScreen]
+///   - `/Lembrete` → [LembreteScreen]
+///   - `/usuario` → [UsuarioScreen] (dependente de [AuthService])
+///
+/// Essa classe é chamada pelo `runApp()` dentro de `main.dart`.
 class MyApp extends StatelessWidget {
-  /* 
-    Essa classe tem como função colocar a personalização base do site, como seu style e sua página principal.
-    Ela é chamada pelo runApp() e chama a função da home que guiara o usuário pelo seu aplicativo.
-  */
-  const MyApp({super.key}); //Construtor necessário para todas as classes
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812), // iPhone X base
+      designSize: const Size(375, 812), // iPhone X como base
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, _) => MaterialApp(
@@ -34,8 +43,6 @@ class MyApp extends StatelessWidget {
           '/inventario': (context) => const InventarioScreen(),
           '/Lembrete': (context) => const LembreteScreen(),
           '/usuario': (context) => UsuarioScreen(authService: AuthService()),
-
-
         },
       ),
     );

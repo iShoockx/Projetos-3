@@ -1,24 +1,42 @@
-// lib/services/auth.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 import '../models/usuario.dart';
 
-/// Serviço de autenticação + persistência do perfil no Firestore.
+/// Serviço responsável pela autenticação de usuários
+/// e persistência do perfil no Firestore.
+///
+/// Esse service encapsula:
+/// - Autenticação via [FirebaseAuth].
+/// - Criação e atualização de documentos do usuário no [FirebaseFirestore].
+/// - Conversão do usuário autenticado para o modelo [AppUser].
+///
+/// ### Principais responsabilidades:
+/// - Criar novos usuários com e-mail/senha.
+/// - Fazer login e logout.
+/// - Expor um stream reativa para mudanças no estado de autenticação.
+/// - Manter os perfis sincronizados entre Auth e Firestore.
 class AuthService {
+  /// Constrói um [AuthService] opcionalmente recebendo
+  /// instâncias customizadas de [FirebaseAuth] e [FirebaseFirestore].
   AuthService({fb_auth.FirebaseAuth? auth, FirebaseFirestore? db})
-    : _auth = auth ?? fb_auth.FirebaseAuth.instance,
-      _db = db ?? FirebaseFirestore.instance;
+      : _auth = auth ?? fb_auth.FirebaseAuth.instance,
+        _db = db ?? FirebaseFirestore.instance;
 
   final fb_auth.FirebaseAuth _auth;
   final FirebaseFirestore _db;
 
-  /// Stream reativa com o AppUser (ou null se deslogado).
+  /// Stream reativa que emite [AppUser] sempre que houver
+  /// mudança no estado de autenticação.
+  ///
+  /// Retorna `null` quando o usuário estiver deslogado.
   Stream<AppUser?> get userChanges =>
       _auth.authStateChanges().asyncMap(_userFromFirebase);
 
-  /// Retorna o AppUser a partir do FirebaseAuth.User,
-  /// criando o doc no Firestore se não existir.
+  /// Converte um [fb_auth.User] para [AppUser].
+  ///
+  /// Se o documento ainda não existir no Firestore, cria um perfil
+  /// básico com os dados mínimos (nome, e-mail, data de criação).
   Future<AppUser?> _userFromFirebase(fb_auth.User? user) async {
     if (user == null) return null;
     final ref = _db
@@ -34,7 +52,7 @@ class AuthService {
       return doc.data();
     }
 
-    // Cria um perfil básico
+    /// Cria um perfil básico caso não exista no Firestore.
     final appUser = AppUser(
       id: user.uid,
       name: user.displayName ?? (user.email?.split('@').first ?? 'Usuário'),
@@ -49,8 +67,11 @@ class AuthService {
     return appUser;
   }
 
-  /// Cadastro com e-mail/senha.
-  /// Cria o usuário no FirebaseAuth e salva/atualiza o perfil no Firestore.
+  /// Cria um novo usuário com e-mail e senha no FirebaseAuth.
+  ///
+  /// Também salva o perfil correspondente no Firestore.
+  ///
+  /// Retorna o [AppUser] criado.
   Future<AppUser> signUp({
     required String name,
     required String email,
@@ -83,7 +104,10 @@ class AuthService {
     return appUser;
   }
 
-  /// Login com e-mail/senha.
+  /// Realiza login com e-mail e senha.
+  ///
+  /// Retorna o [AppUser] correspondente.
+  /// Lança [Exception] caso não seja possível carregar o perfil.
   Future<AppUser> signIn({
     required String email,
     required String password,
@@ -99,11 +123,18 @@ class AuthService {
     return appUser;
   }
 
+  /// Realiza logout do usuário autenticado.
   Future<void> signOut() async {
     await _auth.signOut();
   }
 
-  /// Atualiza campos do perfil no Firestore (e displayName no Auth).
+  /// Atualiza os dados do perfil no Firestore e também o displayName no FirebaseAuth.
+  ///
+  /// - [name]: nome obrigatório do usuário.
+  /// - [celular]: número de celular opcional.
+  /// - [role]: função do usuário opcional.
+  ///
+  /// Lança [Exception] caso não exista um usuário autenticado.
   Future<void> updateProfile({
     required String name,
     String? celular,
@@ -124,7 +155,7 @@ class AuthService {
         .set(data, SetOptions(merge: true));
   }
 
-  /// Retorna AppUser atual ou null se não auteticado
+  /// Retorna o [AppUser] atual ou `null` se não houver usuário autenticado.
   Future<AppUser?> get currentUser async {
     final user = _auth.currentUser;
     if (user == null) return null;
@@ -140,17 +171,24 @@ class AuthService {
 
     return doc.data();
   }
+
+  /// Atualiza o e-mail do usuário tanto no Firestore quanto no FirebaseAuth.
+  ///
+  /// > OBS: o `user.updateEmail(email)` foi comentado aqui, mas
+  /// em produção você pode reativar caso queira refletir
+  /// a alteração também no [FirebaseAuth].
   Future<void> updateEmail(String email) async {
-      final user = _auth.currentUser;
-      if (user == null) throw Exception('Não autenticado.');
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('Não autenticado.');
 
-      // await user.updateEmail(email);
+    // await user.updateEmail(email);
 
-      await _db.collection('users').doc(user.uid).set({
-        'email': email,
-      }, SetOptions(merge: true));
-    }
+    await _db.collection('users').doc(user.uid).set({
+      'email': email,
+    }, SetOptions(merge: true));
+  }
+
+  /// Retorna diretamente o usuário autenticado no [FirebaseAuth],
+  /// ou `null` caso não haja sessão ativa.
   fb_auth.User? get firebaseUser => _auth.currentUser;
 }
-
-

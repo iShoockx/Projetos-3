@@ -4,6 +4,16 @@ import '../widgets/appbar.dart';
 import '../widgets/navbar.dart';
 import '../cache/user_cache.dart'; 
 
+/// Tela inicial do aplicativo exibida após o login.
+///
+/// Essa tela:
+/// - Mostra uma saudação de boas-vindas.
+/// - Recupera e mantém em memória o uid do usuário
+///   armazenado em cache ([UserCache]).
+/// - Possui uma [CustomAppBar] no topo e uma [Navbar] fixa na parte inferior.
+///
+/// O estado dessa tela é gerenciado pelo [_HomeScreenState].
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

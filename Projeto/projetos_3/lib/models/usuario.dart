@@ -13,6 +13,7 @@ UserRole userRoleFromString(String value) {
 
 String userRoleToString(UserRole role) => role.name;
 
+/// Modelagem do User para armazenamento no banco
 class AppUser {
   final String id; // uid do Firebase Auth
   final String name;

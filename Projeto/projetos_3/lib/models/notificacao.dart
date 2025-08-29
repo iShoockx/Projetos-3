@@ -1,3 +1,4 @@
+/// Modelagem da Notificacao para armazenamento no banco
 class Notificacao {
     //Campos tabela
     final int id;

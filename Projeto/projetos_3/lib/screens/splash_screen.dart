@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+/// Tela de Splash/Boas-vindas do aplicativo
+/// 
+/// Esta tela é exibida durante a inicialização do aplicativo e serve para:
+/// - Apresentar a identidade visual da marca
+/// - Realizar inicializações assíncronas necessárias
+/// - Preparar o ambiente antes de navegar para a tela principal
+/// - Proporcionar uma experiência profissional de carregamento
+/// 
+/// **Funcionalidades:**
+/// - Exibição temporizada (3 segundos)
+/// - Transição automática para a tela de login
+/// - Interface limpa e profissional
+/// - Indicador visual de carregamento
+/// 
+/// **Fluxo:**
+/// 1. App inicia → Exibe SplashScreen
+/// 2. Aguarda 3 segundos
+/// 3. Navega automaticamente para /login
+/// 4. Nunca retorna (pushReplacement)
+
 class SplashScreen extends StatefulWidget {
-  /*
-     definir uma tela de loading do aplicativo com a identidade visual da marca
-  */
+
   const SplashScreen({super.key});
 
   @override

@@ -4,6 +4,28 @@ import 'package:projetos_3/widgets/appbar.dart';
 import 'package:projetos_3/services/lembrete.dart';
 import 'package:projetos_3/widgets/navbar.dart';
 
+/// Tela de Criação de Lembretes
+/// 
+/// Esta tela permite aos usuários criar e salvar lembretes personalizados com:
+/// - Título e descrição
+/// - Data e hora específicas
+/// - Marcação como importante
+/// - Armazenamento no Firebase Firestore
+/// 
+/// **Funcionalidades:**
+/// - Formulário completo para criação de lembretes
+/// - Seleção de data e hora nativa do dispositivo
+/// - Validação de campos obrigatórios
+/// - Integração com serviço Firebase
+/// - Interface responsiva com ScreenUtil
+/// 
+/// **Fluxo:**
+/// 1. Usuário preenche os dados do lembrete
+/// 2. Seleciona data e hora desejada
+/// 3. Opcionalmente marca como importante
+/// 4. Salva no Firebase
+/// 5. Recebe feedback visual do resultado
+
 class LembreteScreen extends StatefulWidget {
   const LembreteScreen({super.key});
 

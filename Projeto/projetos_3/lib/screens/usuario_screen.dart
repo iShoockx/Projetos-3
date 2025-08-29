@@ -5,6 +5,26 @@ import '../models/usuario.dart';
 import '../widgets/navbar.dart';
 import '../widgets/appbar.dart';
 
+/// Tela de Gerenciamento de Perfil do Usuário
+/// 
+/// Esta tela permite aos usuários visualizar e editar suas informações pessoais:
+/// - Editar nome, e-mail e telefone
+/// - Salvar alterações no Firebase Auth e Firestore
+/// - Logout seguro da aplicação
+/// - Interface responsiva e validada
+/// 
+/// **Integração:**
+/// - Firebase Authentication (dados de autenticação)
+/// - Cloud Firestore (dados complementares do perfil)
+/// - Serviço personalizado de autenticação (AuthService)
+/// 
+/// **Funcionalidades:**
+/// - Carregamento automático dos dados do usuário
+/// - Validação de formulários em tempo real
+/// - Atualização simultânea no Auth e Firestore
+/// - Feedback visual de operações
+/// - Logout com navegação limpa
+
 class UsuarioScreen extends StatefulWidget {
   final AuthService authService;
 

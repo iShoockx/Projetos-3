@@ -1,3 +1,4 @@
+/// Modelagem da ListaProdutos para armazenamento no banco
 class ListaProdutos {
   final String listaID;
   final String userID;

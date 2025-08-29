@@ -3,10 +3,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:projetos_3/screens/notifications_screen.dart';
 import 'package:projetos_3/utils/route_transitions.dart';
 
+/// CustomAppBar - Barra de aplicativo personalizada
+/// 
+/// Barra de navegação superior customizada com:
+/// - Logo e nome da marca (Tec Frio)
+/// - Ícone de notificações com navegação
+/// - Animação personalizada de transição
+/// - Design responsivo com ScreenUtil
+/// - Implementa PreferredSizeWidget
+/// 
+/// **Características:**
+/// - Sombra suave para efeito de profundidade
+/// - SafeArea integrado para dispositivos com notch
+/// - Layout responsivo com espaçamentos adaptativos
+/// - Navegação com animação slideFromRight
+/// - Ícone temático azul (ac_unit)
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  /*
-    Essa classe define a appbar superior do aplicativo para deixar o desing igual para todas as páginas e reciclar linhas de códigos idênticas, facilitando a reparação de erros futuros 
-  */
 
   const CustomAppBar({super.key});
 

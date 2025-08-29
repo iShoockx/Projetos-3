@@ -1,3 +1,4 @@
+/// Modelagem da Produto para armazenamento no banco
 class Produto {
   final String id;
   final String nome;

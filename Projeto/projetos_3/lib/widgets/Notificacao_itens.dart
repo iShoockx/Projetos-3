@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:projetos_3/services/lembrete.dart';
 
+/// Um widget que exibe um lembrete/aviso com título, descrição e tempo.
+///
+/// - Mostra um ícone diferente se o lembrete for [importante].
+/// - Exibe um botão de fechar (X) no canto superior direito, 
+///   que remove o lembrete do banco via [LembreteService].
+/// - Pode notificar o pai via callback [onDelete] após exclusão.
 class NotificacaoItem extends StatelessWidget {
+  /// ID do lembrete no banco de dados (Firebase).
   final String? id;
+
+  /// Título do lembrete exibido em destaque.
   final String titulo;
+
+  /// Texto descritivo do lembrete.
   final String descricao;
+
+  /// Informação sobre o tempo (ex: "há 2h", "ontem", "10/08").
   final String tempo;
+
+  /// Se `true`, destaca o lembrete como importante
+  /// (com borda azul e ícone de alarme).
   final bool importante;
+
+  /// Função callback opcional chamada após a exclusão.
   final VoidCallback? onDelete;
 
+  /// Cria um item de notificação/lembrete estilizado.
   const NotificacaoItem({
     super.key,
     required this.id,
@@ -23,9 +42,10 @@ class NotificacaoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Container principal do lembrete
         Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          margin: const EdgeInsets.only(top: 8, right: 8), // Espaço para o X
+          margin: const EdgeInsets.only(top: 8, right: 8),
           decoration: BoxDecoration(
             color: importante ? Colors.red[50] : Colors.white,
             border: Border.all(
@@ -42,10 +62,13 @@ class NotificacaoItem extends StatelessWidget {
                 size: 24,
               ),
               const SizedBox(width: 12),
+
+              // Texto do lembrete
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// Título
                     Text(
                       titulo,
                       style: TextStyle(
@@ -57,6 +80,8 @@ class NotificacaoItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
+
+                    /// Descrição
                     Text(
                       descricao,
                       style: const TextStyle(fontSize: 14),
@@ -64,6 +89,8 @@ class NotificacaoItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
+
+                    /// Tempo
                     Text(
                       tempo,
                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
@@ -75,7 +102,7 @@ class NotificacaoItem extends StatelessWidget {
           ),
         ),
 
-        // Botão X no canto superior direito
+        // Botão de fechar (X)
         Positioned(
           top: 0,
           right: 0,
@@ -91,10 +118,8 @@ class NotificacaoItem extends StatelessWidget {
                     ),
                   );
 
-                  // Notifica o widget parent se necessário
-                  if (onDelete != null) {
-                    onDelete!();
-                  }
+                  // Notifica o pai se necessário
+                  onDelete?.call();
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

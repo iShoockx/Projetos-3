@@ -5,6 +5,28 @@ import '../services/lembrete.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+/// Tela de Notificações e Lembretes
+/// 
+/// Esta tela exibe e gerencia todos os lembretes do usuário com:
+/// - Lista de lembretes futuros
+/// - Exclusão por swipe ou botão
+/// - Atualização pull-to-refresh
+/// - Filtro automático de lembretes expirados
+/// - Destaque para lembretes importantes
+/// 
+/// **Funcionalidades:**
+/// - Carregamento assíncrono de lembretes do Firestore
+/// - Deleção automática de lembretes expirados
+/// - Interface com gestos de swipe para exclusão
+/// - Formatação inteligente de datas
+/// - Indicadores visuais de importância
+/// 
+/// **Fluxo:**
+/// 1. Carrega lembretes do usuário
+/// 2. Filtra e remove expirados
+/// 3. Exibe lista organizada
+/// 4. Permite gestos de exclusão
+
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 

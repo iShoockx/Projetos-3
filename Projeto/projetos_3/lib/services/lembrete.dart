@@ -1,11 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../cache/user_cache.dart';
 
+/// Serviço responsável por gerenciar os lembretes dos usuários no Firestore.
+///
+/// Essa classe encapsula as operações de **CRUD** sobre a coleção `Lembretes`,
+/// garantindo que todas as ações sejam vinculadas ao `userID` armazenado
+/// no [UserCache].  
+///
+/// ### Funcionalidades:
+/// - Criar novos lembretes.
+/// - Listar lembretes do usuário logado (ordenados por data).
+/// - Deletar lembretes pelo ID.
 class LembreteService {
-  final CollectionReference lembretesCollection = FirebaseFirestore.instance
-      .collection('Lembretes');
+  /// Referência para a coleção de lembretes no Firestore.
+  final CollectionReference lembretesCollection =
+      FirebaseFirestore.instance.collection('Lembretes');
 
-  /// Adiciona um lembrete com título, data/hora e userID do cache
+  /// Adiciona um novo lembrete para o usuário logado.
+  ///
+  /// - [titulo]: Título do lembrete.
+  /// - [descricao]: Descrição ou detalhes adicionais.
+  /// - [dataHora]: Data e hora do lembrete.
+  /// - [isImportant]: Define se o lembrete é marcado como importante.
+  ///
+  /// Lança uma [Exception] caso não consiga recuperar o `userID` do cache.
   Future<void> adicionarLembrete(
     String titulo,
     String descricao,
@@ -30,7 +48,15 @@ class LembreteService {
     }
   }
 
-  /// Resgata todos os lembretes feitos por um usuário (ordenados por data decrescente, sem índice)
+  /// Retorna todos os lembretes do usuário logado.
+  ///
+  /// O retorno é uma lista de `Map<String, dynamic>` contendo os campos do
+  /// lembrete e também o campo `id` (que corresponde ao ID do documento).
+  ///
+  /// A lista é ordenada manualmente pela data, exibindo primeiro os lembretes
+  /// mais recentes.
+  ///
+  /// Lança uma [Exception] caso o usuário não seja encontrado no cache.
   Future<List<Map<String, dynamic>>> getLembretesDoUsuario() async {
     try {
       final userId = await UserCache.getUid();
@@ -61,7 +87,11 @@ class LembreteService {
     }
   }
 
-  /// Deleta um lembrete pelo ID (agora aceita String?)
+  /// Deleta um lembrete pelo seu [id].
+  ///
+  /// - [id]: ID do documento do lembrete no Firestore.
+  ///
+  /// Caso o `id` seja `null` ou vazio, lança uma [Exception].
   Future<void> deletarLembrete(String? id) async {
     try {
       if (id == null || id.isEmpty) {

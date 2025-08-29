@@ -5,6 +5,27 @@ import '../services/auth.dart';
 import '../models/usuario.dart';
 import '../cache/user_cache.dart';
 
+/// Tela de Login e Cadastro de Usuários
+/// 
+/// Esta tela oferece um sistema completo de autenticação com:
+/// - Login para usuários existentes
+/// - Cadastro para novos usuários
+/// - Toggle entre modos de login/cadastro
+/// - Armazenamento seguro do UID no cache local
+/// - Validação de formulários robusta
+/// - Tratamento de erros específicos do Firebase
+/// 
+/// **Funcionalidades:**
+/// - Autenticação com Firebase Auth
+/// - Interface responsiva com ScreenUtil
+/// - Validação em tempo real dos campos
+/// - Feedback visual com SnackBars
+/// - Navegação automática após login bem-sucedido
+/// 
+/// **Fluxos:**
+/// - Login → Home Screen
+/// - Cadastro → Home Screen (com sessão automática)
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
