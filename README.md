@@ -113,8 +113,6 @@ Itens que você precisa antes de rodar o código:
 
 **Android Studio**
   
-Android Studio
-
   1. Download oficial [aqui](https://flutter.dev/docs/get-started/install)
 
   2. Instale os SDK Tools durante a instalação
