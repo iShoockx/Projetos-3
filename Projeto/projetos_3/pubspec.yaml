@@ -26,7 +26,9 @@ dev_dependencies:
   flutter_launcher_icons: "^0.14.4"
   build_runner: ^2.4.8
   json_serializable: ^6.8.0
-  mockito: ^5.4.4   
+  fake_cloud_firebase: 4.0.0 
+  mockito: ^5.4.4 
+  mocktail: ^1.0.4
 
 flutter_launcher_icons:
   android: "launcher_icon"
