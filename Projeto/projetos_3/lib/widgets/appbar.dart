@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:projetos_3/screens/notifications_screen.dart';
-import 'package:projetos_3/utils/route_transitions.dart';
+import '../screens/notifications_screen.dart';
+import '../utils/route_transitions.dart';
 
 /// CustomAppBar - Barra de aplicativo personalizada
 /// 

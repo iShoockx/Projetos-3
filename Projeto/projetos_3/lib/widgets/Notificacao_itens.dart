@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projetos_3/services/lembrete.dart';
+import '../services/lembrete.dart';
 
 /// Um widget que exibe um lembrete/aviso com título, descrição e tempo.
 ///

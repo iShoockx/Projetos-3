@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projetos_3/models/produto.dart';
-import 'package:projetos_3/services/itens.dart';
+import '../models/produto.dart';
+import '../services/itens.dart';
 
 /// InventarioItens - Item da lista de inventário
 ///
