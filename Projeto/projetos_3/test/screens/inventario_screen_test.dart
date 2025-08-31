@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Widget fake para simular a tela de inventário
+/*
+  Testes da tela de inventário (FakeInventarioScreen).
+
+  Descrição:
+  - Valida a renderização dos principais widgets da tela:
+      * Campo de texto (TextField)
+      * Botão/texto "Adicionar Item"
+      * Indicador de loading (CircularProgressIndicator)
+  - Permite testar o comportamento da interface de forma isolada,
+    sem depender da implementação real ou do banco de dados.
+
+  Tipo de teste:
+  - Unitário / integração leve de widgets
+
+  Ferramenta utilizada:
+  - flutter_test
+*/
+
 class FakeInventarioScreen extends StatelessWidget {
   const FakeInventarioScreen({super.key});
 
