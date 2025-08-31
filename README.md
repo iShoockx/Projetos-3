@@ -4,6 +4,7 @@
 O projeto desenvolvido pelo grupo tem como objetivo desenvolver uma solução para as demandas da empresa itabirana TecFrio, visando auxiliar na organização dela, bem como automatizar e facilitar os seus processos cotidianos. 
 Para atingir nossa meta, nós desenvolvemos um aplicativo mobile, em Flutter, para controle de inventário, no qual uma funcionário pode realizar o CRUD completo dos recursos disponiveis no estoque da empresa. Além disso, o aplicativo também
 permite ao usuário registrar notificações para registrar de tarefas importantes na sua rotina. 
+
 Para conher melhor o projeto, faça dowload do nosso [vídeo](Apresentacao_video.mp4)
 
 ## 💾 Banco de dados 
