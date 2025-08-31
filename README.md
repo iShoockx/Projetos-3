@@ -51,7 +51,7 @@ class notificacao_user {
 
 %% Relacionamentos
 lista_produtos "1" -- "1" user : lista
-lista_produtos "1" -- "1" produto : produtoID
+lista_produtos "n" -- "1" produto : produtoID
 notificacao_user "1" -- "1" user : IDuser
 notificacao "1" -- "1" notificacao_user : IDnotificacao
 ```
